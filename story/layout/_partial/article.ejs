@@ -1,0 +1,85 @@
+
+
+<%- partial('/sidebar') %>
+
+<article class="wrapper style1 align-left">
+
+    <!-- 返回按扭 -->
+    <a href="javascript:history.back(-1)" class="cd-nav-trigger">
+        <span class="cd-nav-icon"></span>
+        <svg x="0px" y="0px" width="60px" height="60px" viewBox="0 0 60 60">
+            <circle fill="transparent" stroke="#656e79" stroke-width="1" cx="27" cy="27" r="25" stroke-dasharray="157 157" stroke-dashoffset="157"></circle>
+        </svg>
+    </a>
+
+    <div class="inner">
+        <div class="header">
+            <h1 class="title"><%- post.title %></h1>
+            <div class="stuff">
+                <span>日期: <%- date(post.date, 'YYYY/MM/DD dddd') %></span>
+                <span>字数: <%- strip_html(post.content).length %> </span>
+                <span>评论: <span id="valine-count"></span> </span>
+                <span id="busuanzi_container_page_pv">访问量: <span id="busuanzi_value_page_pv"></span>次</span>
+            </div>
+        </div>
+        <div class="post-content">
+            <%- post.content %>
+        </div>
+
+        <!-- 目录 -->
+        <%- tocbot(['100px', 'calc((100% - 1300px) / 2 - 205px)']) %>
+
+        <!-- 标签 -->
+        <div class="tags">
+            <span>标签：</span>
+            <% post.tags.each(function(tag){ %>
+                <a href="<%- url_for(tag.path) %>" class="tag"><%= tag.name %></a>
+            <% }) %>
+        </div>
+
+        <!-- 上/下一页 -->
+        <hr>
+        <div class="post-nav">
+            <div class="post-nav-prev post-nav-item" style="text-align: center;font-size: 22px;">
+                <% if (post.prev){ %>
+                    <a href="<%- url_for(post.prev.path) %>" ><i class="fa fa-chevron-left"></i><%= post.prev.title %></a>
+                <% } %>
+                <span>&nbsp;&nbsp;</span>
+                <% if (post.next){ %>
+                    <a href="<%- url_for(post.next.path) %>" ><%= post.next.title %><i class="fa fa-chevron-right"></i></a>
+                <% } %>
+            </div>
+        </div>
+
+        
+
+        <style>
+            #vcomments {
+                font-size: 25px;
+            }
+
+            #vcomments input {
+                font-size: 20px;
+                display: inline-block;
+            }
+            
+            #vcomments button {
+                font-size: 20x;
+                height: 2.3rem;
+            }
+
+        </style>
+        <div id="vcomments"></div>
+        <script>
+            var valine = new Valine();
+            valine.init({
+                el: '#vcomments',
+                appId: '<%- theme.valine.API_ID %>',
+                appKey: '<%- theme.valine.API_Key %>'
+            })
+            valine.Q(location.pathname.replace(/index\.html?$/,'')).count().then(num => {
+                document.getElementById("valine-count").innerHTML = num;
+            })
+        </script>
+    </div>
+</article>

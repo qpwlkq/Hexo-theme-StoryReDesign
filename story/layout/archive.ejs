@@ -1,0 +1,31 @@
+<%- css(['/css/archive.css']) %>
+
+<%- partial('_partial/sidebar') %>
+
+<div class="content" style="top: 20px">
+    <% var tempYear %>
+    <% var posts = site.posts.sort('date') %>
+    <% posts.each(function(post, i){ %>
+        <% var currentYear = parseInt(date(post.date, 'YYYY')); %>
+        <% if (tempYear != currentYear){ %>
+            <% tempYear = currentYear %>
+            <article>
+                <h3><%- currentYear%></h3>
+        <% } %>
+        <section>
+            <% var category = Object.values(post.categories.data[0])[0]%>
+            <span class="point-time point-<%= __('color.' + category)%>"></span>
+            <time datetime="<%- date(post.date, 'YYYY-MM')%>">
+                <span><%- date(post.date, 'MMMM DD,')%></span>
+            </time>
+            <aside>
+                <p class="things"><%= post.title%></p>
+                <p class="brief"><span class="text-<%= __('color.' + category)%>"><%= category%>
+                </span></p>
+            </aside>
+        </section>
+        <% if (!posts.eq(i + 1) || currentYear != parseInt(date(posts.eq(i + 1).date, 'YYYY'))){ %>
+            </article>
+        <% } %>
+    <% }) %>
+</div>
